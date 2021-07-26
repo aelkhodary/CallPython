@@ -1,0 +1,30 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="CallPython"
+     targetNamespace="http://xmlns.oracle.com/CallPython/CallPython/CallPython"
+     xmlns:tns="http://xmlns.oracle.com/CallPython/CallPython/CallPython"
+     xmlns:inp1="ae.scad.doe"
+     xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+    <plnk:partnerLinkType name="CallPython">
+        <plnk:role name="CallPythonProvider" portType="tns:execute_ptt"/>
+    </plnk:partnerLinkType>
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="ae.scad.doe" schemaLocation="../Schemas/python.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="requestMessage">
+        <wsdl:part name="request" element="inp1:request"/>
+    </wsdl:message>
+    <wsdl:message name="replyMessage">
+        <wsdl:part name="response" element="inp1:response"/>
+    </wsdl:message>
+    <wsdl:portType name="execute_ptt">
+        <wsdl:operation name="execute">
+            <wsdl:input message="tns:requestMessage"/>
+            <wsdl:output message="tns:replyMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

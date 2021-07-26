@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="ae.scad.doe" targetNamespace="ae.scad.doe"
+            elementFormDefault="qualified">
+  <xsd:element name="request">
+    <xsd:complexType/>
+  </xsd:element>
+  <xsd:element name="response">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="result" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Fault">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="ErrorCode" type="xsd:string"/>
+        <xsd:element name="ErrorDesc" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

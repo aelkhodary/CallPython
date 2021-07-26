@@ -1,0 +1,84 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer
+
+  Created: Mon Jul 26 18:09:31 GST 2021
+  Author:  amelkhodary
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="CallPython" targetNamespace="http://xmlns.oracle.com/CallPython/CallPython/CallPython"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://xmlns.oracle.com/CallPython/CallPython/CallPython"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:ns1="http://xmlns.oracle.com/CallPython/CallPython/CallPython"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ui="http://xmlns.oracle.com/soa/designer" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+         xmlns:ns2="ae.scad.doe">
+    <!--
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS
+      List of services participating in this BPEL process
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+    <import namespace="http://xmlns.oracle.com/CallPython/CallPython/CallPython" location="../WSDLs/CallPython.wsdl"
+            importType="http://schemas.xmlsoap.org/wsdl/" ui:processWSDL="true"/>
+    <import location="scad.gov.ae.Script" importType="http://schemas.oracle.com/bpel/extension/java"/>
+    <partnerLinks>
+        <!--
+      The 'client' role represents the requester of this service. It is
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="callpython_client" partnerLinkType="ns1:CallPython" myRole="CallPythonProvider"/>
+    </partnerLinks>
+    <!--
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES
+      List of messages and XML documents used within this BPEL process
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="ns1:requestMessage"/>
+        <!-- Reference to the message that will be returned to the requester-->
+        <variable name="outputVariable" messageType="ns1:replyMessage"/>
+        <variable name="Python_Body" type="xsd:string"/>
+    </variables>
+    <!--
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC
+     Set of activities coordinating the flow of messages across the
+     services integrated within this business process
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in CallPython.wsdl) -->
+        <receive name="receiveInput" partnerLink="callpython_client" portType="ns1:execute_ptt" operation="execute"
+                 variable="inputVariable" createInstance="yes"/>
+        <scope name="Service">
+            <sequence name="Sequence1">
+                <extensionActivity>
+                    <bpelx:exec name="Call_Python">
+                        <![CDATA[try{
+Script script = new Script();
+setVariableData("Python_Body",script.getOutput());
+} catch(Exception e){
+   addAuditTrailEntry(e);
+   }]]>
+                    </bpelx:exec>
+                </extensionActivity>
+                <assign name="Output">
+                    <copy>
+                        <from>$Python_Body</from>
+                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.response/ns2:result</to>
+                    </copy>
+                </assign>
+            </sequence>
+        </scope>
+        <!-- Generate reply to synchronous request -->
+        <reply name="replyOutput" partnerLink="callpython_client" portType="ns1:execute_ptt" operation="execute"
+               variable="outputVariable"/>
+    </sequence>
+</process>
