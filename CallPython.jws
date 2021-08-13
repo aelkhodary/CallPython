@@ -27,6 +27,7 @@
    <list n="listOfChildren">
       <hash><url n="URL" path="CallPython/CallPython.jpr"/></hash>
       <hash><url n="URL" path="PythonScript/PythonScript.jpr"/></hash>
+      <hash><url n="URL" path="../../scad_soa_compistes_11g/SCAD-ADSC-Integ/SCAD-ADSC-Integ.jpr"/></hash>
    </list>
    <hash n="oracle.jdeveloper.maven.compiler.MavenConfiguration">
       <hash n="oracle.jdeveloper.maven.compiler.MavenConfiguration">

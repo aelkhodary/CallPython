@@ -4,9 +4,9 @@ web scraping
 >> pip install lxml
 >> pip install bs4
 """
-
 import requests
 import bs4
+
 
 result = requests.get("https://ae.indeed.com/")
 #result = requests.get("https://169.45.207.192/")

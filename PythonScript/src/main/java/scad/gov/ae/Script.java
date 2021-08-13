@@ -1,13 +1,20 @@
 package scad.gov.ae;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.io.StringWriter;
+
 import java.util.List;
 
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
+
+import javax.script.SimpleScriptContext;
 
 import org.apache.commons.io.IOUtils;
 
@@ -30,7 +37,12 @@ public class Script {
 
 
         Script sc = new Script();
-        System.out.println(sc.getOutput());
+        try {
+
+            System.out.println(sc.getOutput());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /*int exitCode = process.waitFor();
         System.out.println(exitCode);
@@ -64,6 +76,7 @@ public class Script {
 
             return results.get(0);
         } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return "NO Data Founded";
@@ -74,8 +87,9 @@ public class Script {
     }
 
     private static String resolvePythonScriptPath(String filename) {
-        //File file = new File("src/test/resources/" + filename);
-        File file = new File("/stage/SFTPIntegration/FileData/" + filename);
+        File file = new File("src/test/resources/" + filename);
+        //File file = new File("/stage/SFTPIntegration/FileData/" + filename);
         return file.getAbsolutePath();
     }
+
 }
